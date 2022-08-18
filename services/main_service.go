@@ -1,18 +1,17 @@
 package services
 
 import (
-	"Kirtasite/models"
+	"Kirtasite/config"
+	"net/http"
 )
 
-func GetRoles() (int, map[string]interface{}) {
-	var roles []models.Roles
-	return all(roles)
-	/*result := config.DB.Find(&roles)
+func all(obj interface{}) (int, map[string]interface{}) {
+	result := config.DB.Find(&obj)
 	if result.Error != nil {
 		return http.StatusNoContent, SendMessage(NoContent)
 	} else {
 		send := SendMessage(Ok)
-		send["data"] = roles
+		send["data"] = obj
 		return http.StatusOK, send
-	}*/
+	}
 }
