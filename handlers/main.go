@@ -13,6 +13,10 @@ func MainRouting() http.Handler {
 	// Roles
 	r.HandleFunc(baseurl+"roles", GetRoles).Methods(GET)
 
+	// Cities
+	r.HandleFunc(baseurl+"cities", GetCities).Methods(GET)
+	r.HandleFunc(baseurl+"city/{id:[0-9]+}", GetCityById).Methods(GET)
+
 	handler := cors.AllowAll().Handler(r)
 	return handler
 }
