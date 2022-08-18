@@ -17,6 +17,11 @@ func MainRouting() http.Handler {
 	r.HandleFunc(baseurl+"cities", GetCities).Methods(GET)
 	r.HandleFunc(baseurl+"city/{id:[0-9]+}", GetCityById).Methods(GET)
 
+	// Districts
+	r.HandleFunc(baseurl+"districts", GetDistricts).Methods(GET)
+	r.HandleFunc(baseurl+"district/city/{id:[0-9]+}", GetDistrictByCityId).Methods(GET)
+	r.HandleFunc(baseurl+"district/{id:[0-9]+}", GetDistrictById).Methods(GET)
+
 	handler := cors.AllowAll().Handler(r)
 	return handler
 }
