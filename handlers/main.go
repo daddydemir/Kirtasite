@@ -54,6 +54,10 @@ func MainRouting() http.Handler {
 	r.HandleFunc(baseurl+"order", AddOrder).Methods(POST)
 	r.HandleFunc(baseurl+"order/{id:[0-9]+}", UpdateOrder).Methods(PUT)
 
+	// OrderStatuses
+	r.HandleFunc(baseurl+"statuses", GetOrderStatuses).Methods(GET)
+	r.HandleFunc(baseurl+"status/{id:[0-9]+}", GetOrderStatusById).Methods(GET)
+
 	handler := cors.AllowAll().Handler(r)
 	return handler
 }
