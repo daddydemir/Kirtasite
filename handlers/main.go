@@ -40,6 +40,13 @@ func MainRouting() http.Handler {
 	r.HandleFunc(baseurl+"stationery", AddStationery).Methods(POST)
 	r.HandleFunc(baseurl+"stationery/{id:[0-9]+}", UpdateStationery).Methods(PUT)
 
+	// Prices
+	r.HandleFunc(baseurl+"prices", GetPrices).Methods(GET)
+	r.HandleFunc(baseurl+"price/{id:[0-9]+}", GetPriceById).Methods(GET)
+	r.HandleFunc(baseurl+"prices/stationery/{id:[0-9]+}", GetPriceByStationeryId).Methods(GET)
+	r.HandleFunc(baseurl+"price", AddPrice).Methods(POST)
+	r.HandleFunc(baseurl+"price/{id:[0-9]+}", UpdatePrice).Methods(PUT)
+
 	handler := cors.AllowAll().Handler(r)
 	return handler
 }
