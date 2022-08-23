@@ -1,12 +1,12 @@
 package models
 
 type Addresses struct {
-	Id           int       `json:"id"`
-	CityId       int       `json:"city_id"`
-	DistrictId   int       `json:"district_id"`
-	Header       string    `json:"header"`
-	X            string    `json:"x"`
-	Y            string    `json:"y"`
-	CityData     Cities    `json:"city" gorm:"foreignKey:city_id;references:id"`
-	DistrictData Districts `json:"district" gorm:"foreignKey:district_id;references:id"`
+	Id         int       `json:"id" gorm:"primaryKey"`
+	CityId     int       `json:"city_id" gorm:"foreignKey"`
+	DistrictId int       `json:"district_id" gorm:"foreignKey"`
+	Header     string    `json:"header"`
+	X          string    `json:"x"`
+	Y          string    `json:"y"`
+	City       Cities    `json:"city"`
+	District   Districts `json:"district"`
 }

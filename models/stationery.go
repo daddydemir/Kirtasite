@@ -1,10 +1,11 @@
 package models
 
-type Stationeryies struct {
-	UserId      int       `json:"user_id"`
+type Stationeries struct {
+	UserId      int       `json:"user_id" gorm:"primaryKey"`
 	CompanyName string    `json:"company_name"`
-	AddressId   int       `json:"address_id"`
+	AddressId   int       `json:"address_id" gorm:"foreignKey"`
 	Score       float32   `json:"score"`
-	UserData    Users     `json:"user" gorm:"foreignKey:user_id;references:id"`
-	AddressData Addresses `json:"address" gorm:"foreignKey:address_id;references:id"`
+	User        Users     `json:"user"`
+	Address     Addresses `json:"address"`
+	Prices      []*Prices
 }

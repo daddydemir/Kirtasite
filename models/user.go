@@ -1,10 +1,11 @@
 package models
 
 type Users struct {
-	Id        int    `json:"id"`
-	RoleId    int    `json:"role_id"`
+	Id        int    `json:"id" gorm:"primaryKey"`
+	RoleId    int    `json:"role_id" gorm:"foreignKey"`
 	Password  string `json:"-"`
 	ImagePath string `json:"image_path"`
 	Phone     string `json:"phone"`
-	RoleDate  Roles  `json:"role" gorm:"foreignKey:role_id;references:id"`
+	Mail      string `json:"mail"`
+	Role      Roles  `json:"role"`
 }

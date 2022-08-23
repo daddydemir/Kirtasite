@@ -1,7 +1,7 @@
 package models
 
 type Customers struct {
-	UserId   int    `json:"user_id"`
+	UserId   int    `json:"user_id" gorm:"primaryKey"`
 	Username string `json:"username"`
-	UserData Users  `json:"user" gorm:"foreignKey:user_id;references:id"`
+	User     Users  `json:"user"`
 }
