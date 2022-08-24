@@ -12,7 +12,7 @@ func GetOrderStatuses(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, GET)
 
-	code, message := services.GetOrderStatuses()
+	code, message := services.GetStatuses()
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }
@@ -25,7 +25,7 @@ func GetOrderStatusById(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	code, message := services.GetOrderStatusById(key)
+	code, message := services.GetStatusById(key)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }

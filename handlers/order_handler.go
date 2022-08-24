@@ -53,7 +53,7 @@ func AddOrder(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
-	var order models.Orders
+	var order models.Order
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &order)
 
@@ -70,7 +70,7 @@ func UpdateOrder(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	var order models.Orders
+	var order models.Order
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &order)
 

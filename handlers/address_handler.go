@@ -38,7 +38,7 @@ func AddAddress(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
-	var address models.Addresses
+	var address models.Address
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &address)
 
@@ -55,7 +55,7 @@ func UpdateAddress(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	var address models.Addresses
+	var address models.Address
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &address)
 

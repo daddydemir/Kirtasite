@@ -37,7 +37,7 @@ func AddStationery(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
-	var stationery models.Stationeries
+	var stationery models.Stationery
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &stationery)
 
@@ -54,7 +54,7 @@ func UpdateStationery(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	var stationery models.Stationeries
+	var stationery models.Stationery
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &stationery)
 

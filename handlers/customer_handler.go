@@ -36,7 +36,7 @@ func AddCustomer(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
-	var customer models.Customers
+	var customer models.Customer
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &customer)
 
@@ -53,7 +53,7 @@ func UpdateCustomer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	var customer models.Customers
+	var customer models.Customer
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &customer)
 

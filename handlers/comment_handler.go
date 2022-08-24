@@ -50,7 +50,7 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
-	var comment models.Comments
+	var comment models.Comment
 	body, _ := ioutil.ReadAll(r.Body)
 	json.Unmarshal(body, &comment)
 
@@ -67,7 +67,7 @@ func UpdateComment(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	var comment models.Comments
+	var comment models.Comment
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &comment)
 
