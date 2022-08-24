@@ -3,13 +3,12 @@ package services
 import (
 	"Kirtasite/config"
 	"Kirtasite/models"
-	"gorm.io/gorm/clause"
 	"net/http"
 )
 
 func GetCommentById(key string) (int, map[string]interface{}) {
-	var comments models.Comments
-	result := config.DB.Preload(clause.Associations).Find(&comments, "id = ?", key)
+	var comments models.Comment
+	result := config.DB.Preload("Customer.User.Role").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&comments, "id = ?", key)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
 	} else {
@@ -20,8 +19,8 @@ func GetCommentById(key string) (int, map[string]interface{}) {
 }
 
 func GetCommentsByStationeryId(key string) (int, map[string]interface{}) {
-	var comments []models.Comments
-	result := config.DB.Preload(clause.Associations).Find(&comments, "stationery_id = ?", key)
+	var comments []models.Comment
+	result := config.DB.Preload("Customer.User.Role").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&comments, "stationery_id = ?", key)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
 	} else {
@@ -32,8 +31,8 @@ func GetCommentsByStationeryId(key string) (int, map[string]interface{}) {
 }
 
 func GetCommentsByCustomerId(key string) (int, map[string]interface{}) {
-	var comments []models.Comments
-	result := config.DB.Preload(clause.Associations).Find(&comments, "customer_id = ?", key)
+	var comments []models.Comment
+	result := config.DB.Preload("Customer.User.Role").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&comments, "customer_id = ?", key)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
 	} else {
@@ -43,7 +42,7 @@ func GetCommentsByCustomerId(key string) (int, map[string]interface{}) {
 	}
 }
 
-func AddComment(comment models.Comments) (int, map[string]interface{}) {
+func AddComment(comment models.Comment) (int, map[string]interface{}) {
 	result := config.DB.Create(&comment)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
@@ -54,7 +53,7 @@ func AddComment(comment models.Comments) (int, map[string]interface{}) {
 	}
 }
 
-func UpdateComment(comment models.Comments, key string) (int, map[string]interface{}) {
+func UpdateComment(comment models.Comment, key string) (int, map[string]interface{}) {
 	result := config.DB.Save(&comment)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)

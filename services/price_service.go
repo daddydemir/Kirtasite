@@ -7,21 +7,21 @@ import (
 )
 
 func GetPrices() (int, map[string]interface{}) {
-	var prices []models.Prices
+	var prices []models.Price
 	return all(prices)
 }
 
 func GetPriceById(key string) (int, map[string]interface{}) {
-	var price models.Prices
+	var price models.Price
 	return query("id = ? ", key, &price)
 }
 
 func GetPriceByStationeryId(key string) (int, map[string]interface{}) {
-	var prices []models.Prices
+	var prices []models.Price
 	return query("stationery_id = ?", key, prices)
 }
 
-func AddPrice(price models.Prices) (int, map[string]interface{}) {
+func AddPrice(price models.Price) (int, map[string]interface{}) {
 	result := config.DB.Create(&price)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
@@ -32,7 +32,7 @@ func AddPrice(price models.Prices) (int, map[string]interface{}) {
 	}
 }
 
-func UpdatePrice(prices models.Prices, key string) (int, map[string]interface{}) {
+func UpdatePrice(prices models.Price, key string) (int, map[string]interface{}) {
 	result := config.DB.Save(&prices)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)

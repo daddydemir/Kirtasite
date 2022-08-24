@@ -4,13 +4,12 @@ import (
 	"Kirtasite/config"
 	"Kirtasite/models"
 	"fmt"
-	"gorm.io/gorm/clause"
 	"net/http"
 )
 
 func GetCustomers() (int, map[string]interface{}) {
-	var customers []models.Customers
-	result := config.DB.Preload(clause.Associations).Find(&customers)
+	var customers []models.Customer
+	result := config.DB.Preload("User.Role").Find(&customers)
 	if result.Error != nil {
 		return http.StatusNoContent, SendMessage(NoContent)
 	} else {
@@ -21,8 +20,8 @@ func GetCustomers() (int, map[string]interface{}) {
 }
 
 func GetCustomerByUserId(key string) (int, map[string]interface{}) {
-	var customer models.Customers
-	result := config.DB.Preload(clause.Associations).Find(&customer, "user_id = ?", key)
+	var customer models.Customer
+	result := config.DB.Preload("User.Role").Find(&customer, "user_id = ?", key)
 	if result.Error != nil {
 		return http.StatusNoContent, SendMessage(NoContent)
 	} else {
@@ -32,9 +31,9 @@ func GetCustomerByUserId(key string) (int, map[string]interface{}) {
 	}
 }
 
-func AddCustomer(customers models.Customers) (int, map[string]interface{}) {
+func AddCustomer(customers models.Customer) (int, map[string]interface{}) {
 	// TODO auth
-	fmt.Println("PAROLA : ", customers.UserData.Password)
+	fmt.Println("PAROLA : ", customers.User.Password)
 	if customers.Username == "" {
 		return http.StatusBadRequest, SendMessage(BadRequest)
 	}
@@ -48,7 +47,7 @@ func AddCustomer(customers models.Customers) (int, map[string]interface{}) {
 	}
 }
 
-func UpdateCustomer(customers models.Customers, key string) (int, map[string]interface{}) {
+func UpdateCustomer(customers models.Customer, key string) (int, map[string]interface{}) {
 	// TODO auth
 	result := config.DB.Save(&customers)
 	if result.Error != nil {

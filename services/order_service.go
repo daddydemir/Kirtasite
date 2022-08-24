@@ -3,13 +3,12 @@ package services
 import (
 	"Kirtasite/config"
 	"Kirtasite/models"
-	"gorm.io/gorm/clause"
 	"net/http"
 )
 
 func GetOrderById(key string) (int, map[string]interface{}) {
-	var order models.Orders
-	result := config.DB.Preload(clause.Associations).Find(&order, "id = ?", key)
+	var order models.Order
+	result := config.DB.Preload("Customer.User.Role").Preload("File.Customer.Role").Preload("Status").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&order, "id = ?", key)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
 	} else {
@@ -20,8 +19,8 @@ func GetOrderById(key string) (int, map[string]interface{}) {
 }
 
 func GetOrdersByCustomerId(key string) (int, map[string]interface{}) {
-	var orders []models.Orders
-	result := config.DB.Preload(clause.Associations).Find(&orders, "customer_id = ?", key)
+	var orders []models.Order
+	result := config.DB.Preload("Customer.User.Role").Preload("File.Customer.Role").Preload("Status").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&orders, "customer_id = ?", key)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
 	} else {
@@ -32,8 +31,8 @@ func GetOrdersByCustomerId(key string) (int, map[string]interface{}) {
 }
 
 func GetOrdersByStationeryId(key string) (int, map[string]interface{}) {
-	var orders []models.Orders
-	result := config.DB.Preload(clause.Associations).Find(&orders, "stationery_id = ?", key)
+	var orders []models.Order
+	result := config.DB.Preload("Customer.User.Role").Preload("File.Customer.Role").Preload("Status").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&orders, "stationery_id = ?", key)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
 	} else {
@@ -43,7 +42,7 @@ func GetOrdersByStationeryId(key string) (int, map[string]interface{}) {
 	}
 }
 
-func AddOrder(order models.Orders) (int, map[string]interface{}) {
+func AddOrder(order models.Order) (int, map[string]interface{}) {
 	result := config.DB.Create(&order)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
@@ -54,7 +53,7 @@ func AddOrder(order models.Orders) (int, map[string]interface{}) {
 	}
 }
 
-func UpdateOrder(order models.Orders, key string) (int, map[string]interface{}) {
+func UpdateOrder(order models.Order, key string) (int, map[string]interface{}) {
 	result := config.DB.Save(&order)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)

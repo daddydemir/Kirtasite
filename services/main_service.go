@@ -28,7 +28,7 @@ func query(query string, key string, obj interface{}) (int, map[string]interface
 	}
 }
 
-func save(addresses models.Addresses) (int, map[string]interface{}) {
+func save(addresses models.Address) (int, map[string]interface{}) {
 	result := config.DB.Save(&addresses)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)

@@ -2,11 +2,11 @@ package services
 
 import "Kirtasite/models"
 
-func GetOrderStatuses() (int, map[string]interface{}) {
-	var statuses []models.Order_Statuses
+func GetStatuses() (int, map[string]interface{}) {
+	var statuses []models.Status
 	return all(statuses)
 }
-func GetOrderStatusById(key string) (int, map[string]interface{}) {
-	var status models.Order_Statuses
+func GetStatusById(key string) (int, map[string]interface{}) {
+	var status models.Status
 	return query("id = ?", key, &status)
 }

@@ -3,13 +3,13 @@ package services
 import (
 	"Kirtasite/config"
 	"Kirtasite/models"
-	"gorm.io/gorm/clause"
+	"fmt"
 	"net/http"
 )
 
 func GetStationeries() (int, map[string]interface{}) {
-	var stationeries []models.Stationeries
-	result := config.DB.Preload(clause.Associations).Find(&stationeries)
+	var stationeries []models.Stationery
+	result := config.DB.Preload("User.Role").Preload("Address.City").Preload("Address.District").Find(&stationeries)
 	if result.Error != nil {
 		return http.StatusNoContent, SendMessage(NoContent)
 	} else {
@@ -20,8 +20,8 @@ func GetStationeries() (int, map[string]interface{}) {
 }
 
 func GetStationeryById(key string) (int, map[string]interface{}) {
-	var stationery models.Stationeries
-	result := config.DB.Preload(clause.Associations).Find(&stationery, "user_id = ?", key)
+	var stationery models.Stationery
+	result := config.DB.Preload("User.Role").Preload("Address.City").Preload("Address.District").Find(&stationery, "user_id = ?", key)
 	if result.Error != nil {
 		return http.StatusNoContent, SendMessage(NoContent)
 	} else {
@@ -31,7 +31,7 @@ func GetStationeryById(key string) (int, map[string]interface{}) {
 	}
 }
 
-func AddStationery(stationery models.Stationeries) (int, map[string]interface{}) {
+func AddStationery(stationery models.Stationery) (int, map[string]interface{}) {
 	result := config.DB.Create(&stationery)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
@@ -42,8 +42,9 @@ func AddStationery(stationery models.Stationeries) (int, map[string]interface{})
 	}
 }
 
-func UpdateStationery(stationery models.Stationeries, key string) (int, map[string]interface{}) {
-	result := config.DB.Save(&stationery)
+func UpdateStationery(stationery models.Stationery, key string) (int, map[string]interface{}) {
+	fmt.Println(stationery)
+	result := config.DB.Model(&models.Stationery{}).Where("user_id = ?", key).Save(&stationery)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
 	} else {

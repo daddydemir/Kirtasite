@@ -5,14 +5,6 @@ import (
 )
 
 func GetRoles() (int, map[string]interface{}) {
-	var roles []models.Roles
+	var roles []models.Role
 	return all(roles)
-	/*result := config.DB.Find(&roles)
-	if result.Error != nil {
-		return http.StatusNoContent, SendMessage(NoContent)
-	} else {
-		send := SendMessage(Ok)
-		send["data"] = roles
-		return http.StatusOK, send
-	}*/
 }

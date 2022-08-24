@@ -3,14 +3,13 @@ package services
 import (
 	"Kirtasite/config"
 	"Kirtasite/models"
-	"gorm.io/gorm/clause"
 	"net/http"
 	"strconv"
 )
 
 func GetAddressById(key string) (int, map[string]interface{}) {
-	var address models.Addresses
-	result := config.DB.Preload(clause.Associations).Find(&address, "id = ?", key)
+	var address models.Address
+	result := config.DB.Preload("City").Preload("District").Find(&address, "id = ?", key)
 	if result.Error != nil {
 		return http.StatusNoContent, SendMessage(NoContent)
 	} else {
@@ -21,8 +20,8 @@ func GetAddressById(key string) (int, map[string]interface{}) {
 }
 
 func GetAddressByCityId(key string) (int, map[string]interface{}) {
-	var addresses []models.Addresses
-	result := config.DB.Preload(clause.Associations).Find(&addresses, "city_id = ?", key)
+	var addresses []models.Address
+	result := config.DB.Preload("City").Preload("District").Find(&addresses, "city_id = ?", key)
 	if result.Error != nil {
 		return http.StatusNoContent, SendMessage(NoContent)
 	} else {
@@ -32,7 +31,7 @@ func GetAddressByCityId(key string) (int, map[string]interface{}) {
 	}
 }
 
-func AddAddress(address models.Addresses) (int, map[string]interface{}) {
+func AddAddress(address models.Address) (int, map[string]interface{}) {
 	result := config.DB.Create(&address)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
@@ -43,7 +42,7 @@ func AddAddress(address models.Addresses) (int, map[string]interface{}) {
 	}
 }
 
-func UpdateAddress(addresses models.Addresses, key string) (int, map[string]interface{}) {
+func UpdateAddress(addresses models.Address, key string) (int, map[string]interface{}) {
 	// TODO : auth eksik
 	// delete this (if)
 	id, _ := strconv.Atoi(key)
