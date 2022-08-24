@@ -1,7 +1,7 @@
 package models
 
-type Customers struct {
-	UserId   int    `json:"user_id" gorm:"primaryKey"`
-	Username string `json:"username"`
-	User     Users  `json:"user"`
+type Customer struct {
+	UserId   int `gorm:"primaryKey"`
+	Username string
+	User     User
 }

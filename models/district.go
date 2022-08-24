@@ -1,7 +1,7 @@
 package models
 
-type Districts struct {
-	Id     int    `json:"id" gorm:"primaryKey"`
-	Name   string `json:"name"`
-	CityId int    `json:"city_id" gorm:"foreignKey"`
+type District struct {
+	Id     int `gorm:"primaryKey"`
+	Name   string
+	CityId int `gorm:"foreignKey"`
 }

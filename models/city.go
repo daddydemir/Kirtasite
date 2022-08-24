@@ -1,6 +1,6 @@
 package models
 
-type Cities struct {
-	Id   int    `json:"id" gorm:"primaryKey"`
-	Name string `json:"name"`
+type City struct {
+	Id   int `gorm:"primaryKey"`
+	Name string
 }

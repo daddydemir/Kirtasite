@@ -1,6 +1,6 @@
 package models
 
-type Roles struct {
-	Id   int    `json:"id" gorm:"primaryKey"`
-	Name string `json:"name"`
+type Role struct {
+	Id   int `gorm:"primaryKey"`
+	Name string
 }
