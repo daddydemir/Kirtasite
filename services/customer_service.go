@@ -3,6 +3,7 @@ package services
 import (
 	"Kirtasite/config"
 	"Kirtasite/models"
+	"Kirtasite/secuirty"
 	"fmt"
 	"net/http"
 )
@@ -33,6 +34,7 @@ func GetCustomerByUserId(key string) (int, map[string]interface{}) {
 
 func AddCustomer(customers models.Customer) (int, map[string]interface{}) {
 	// TODO auth
+	customers.User.Password = secuirty.HashPassword(customers.User.Password)
 	fmt.Println("PAROLA : ", customers.User.Password)
 	if customers.Username == "" {
 		return http.StatusBadRequest, SendMessage(BadRequest)

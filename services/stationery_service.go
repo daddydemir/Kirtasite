@@ -3,6 +3,7 @@ package services
 import (
 	"Kirtasite/config"
 	"Kirtasite/models"
+	"Kirtasite/secuirty"
 	"fmt"
 	"net/http"
 )
@@ -32,6 +33,7 @@ func GetStationeryById(key string) (int, map[string]interface{}) {
 }
 
 func AddStationery(stationery models.Stationery) (int, map[string]interface{}) {
+	stationery.User.Password = secuirty.HashPassword(stationery.User.Password)
 	result := config.DB.Create(&stationery)
 	if result.Error != nil {
 		return http.StatusBadRequest, SendMessage(BadRequest)
