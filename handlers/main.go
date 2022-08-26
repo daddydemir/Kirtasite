@@ -71,6 +71,9 @@ func MainRouting() http.Handler {
 	r.HandleFunc(baseurl+"comment", AddComment).Methods(POST)
 	r.HandleFunc(baseurl+"comment/{id:[0-9]+}", UpdateComment).Methods(PUT)
 
+	// Login
+	r.HandleFunc(baseurl+"login", Login).Methods(POST)
+
 	handler := cors.AllowAll().Handler(r)
 	return handler
 }
