@@ -1,4 +1,4 @@
-package auth
+package demirauth
 
 import (
 	"Kirtasite/services"
@@ -8,8 +8,6 @@ import (
 )
 
 func GenerateToken(userId string) string {
-	fmt.Println("Start")
-
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["iat"] = time.Now().Unix()
