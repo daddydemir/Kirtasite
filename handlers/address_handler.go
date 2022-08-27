@@ -52,6 +52,13 @@ func UpdateAddress(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, PUT)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	vars := mux.Vars(r)
 	key := vars["id"]
 
@@ -59,7 +66,7 @@ func UpdateAddress(w http.ResponseWriter, r *http.Request) {
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &address)
 
-	code, message := services.UpdateAddress(address, key)
+	code, message := services.UpdateAddress(address, key, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }
