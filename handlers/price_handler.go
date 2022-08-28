@@ -16,7 +16,7 @@ func GetPrices(w http.ResponseWriter, r *http.Request) {
 
 	code, message := services.GetPrices()
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(message)
+	_ = json.NewEncoder(w).Encode(message)
 }
 
 func GetPriceById(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +29,7 @@ func GetPriceById(w http.ResponseWriter, r *http.Request) {
 
 	code, message := services.GetPriceById(key)
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(message)
+	_ = json.NewEncoder(w).Encode(message)
 }
 
 func GetPriceByStationeryId(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +42,7 @@ func GetPriceByStationeryId(w http.ResponseWriter, r *http.Request) {
 
 	code, message := services.GetPriceByStationeryId(key)
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(message)
+	_ = json.NewEncoder(w).Encode(message)
 }
 
 func AddPrice(w http.ResponseWriter, r *http.Request) {
@@ -50,13 +50,20 @@ func AddPrice(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	var price models.Price
 	body, _ := ioutil.ReadAll(r.Body)
-	json.Unmarshal(body, &price)
+	_ = json.Unmarshal(body, &price)
 
-	code, message := services.AddPrice(price)
+	code, message := services.AddPrice(price, t)
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(message)
+	_ = json.NewEncoder(w).Encode(message)
 }
 
 func UpdatePrice(w http.ResponseWriter, r *http.Request) {

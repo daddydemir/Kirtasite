@@ -53,13 +53,20 @@ func AddOrder(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	var order models.Order
 	body, _ := ioutil.ReadAll(r.Body)
-	json.Unmarshal(body, &order)
+	_ = json.Unmarshal(body, &order)
 
-	code, message := services.AddOrder(order)
+	code, message := services.AddOrder(order, t)
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(message)
+	_ = json.NewEncoder(w).Encode(message)
 }
 
 func UpdateOrder(w http.ResponseWriter, r *http.Request) {
@@ -82,6 +89,86 @@ func UpdateOrder(w http.ResponseWriter, r *http.Request) {
 	_ = json.Unmarshal(body, &order)
 
 	code, message := services.UpdateOrder(order, key, t)
+	w.WriteHeader(code)
+	_ = json.NewEncoder(w).Encode(message)
+}
+
+func CancelOrder(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set(ContentType, JSON)
+	w.Header().Set(AccessOrigin, ORIGIN)
+	w.Header().Set(AccessMethods, PUT)
+
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
+	vars := mux.Vars(r)
+	key := vars["id"]
+
+	code, message := services.CancelOrder(key, t)
+	w.WriteHeader(code)
+	_ = json.NewEncoder(w).Encode(message)
+}
+
+func ConfirmOrder(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set(ContentType, JSON)
+	w.Header().Set(AccessOrigin, ORIGIN)
+	w.Header().Set(AccessMethods, PUT)
+
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
+	vars := mux.Vars(r)
+	key := vars["id"]
+
+	code, message := services.ConfirmOrder(key, t)
+	w.WriteHeader(code)
+	_ = json.NewEncoder(w).Encode(message)
+}
+
+func ReadyOrder(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set(ContentType, JSON)
+	w.Header().Set(AccessOrigin, ORIGIN)
+	w.Header().Set(AccessMethods, PUT)
+
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
+	vars := mux.Vars(r)
+	key := vars["id"]
+
+	code, message := services.ReadyOrder(key, t)
+	w.WriteHeader(code)
+	_ = json.NewEncoder(w).Encode(message)
+}
+
+func CompleteOrder(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set(ContentType, JSON)
+	w.Header().Set(AccessOrigin, ORIGIN)
+	w.Header().Set(AccessMethods, PUT)
+
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
+	vars := mux.Vars(r)
+	key := vars["id"]
+
+	code, message := services.CompleteOrder(key, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }

@@ -38,11 +38,18 @@ func AddFiles(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	var file models.File
 	body, _ := ioutil.ReadAll(r.Body)
 	_ = json.Unmarshal(body, &file)
 
-	code, message := services.AddFiles(file)
+	code, message := services.AddFiles(file, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }

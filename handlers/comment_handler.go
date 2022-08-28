@@ -50,13 +50,20 @@ func AddComment(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, POST)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	var comment models.Comment
 	body, _ := ioutil.ReadAll(r.Body)
-	json.Unmarshal(body, &comment)
+	_ = json.Unmarshal(body, &comment)
 
-	code, message := services.AddComment(comment)
+	code, message := services.AddComment(comment, t)
 	w.WriteHeader(code)
-	json.NewEncoder(w).Encode(message)
+	_ = json.NewEncoder(w).Encode(message)
 }
 
 func UpdateComment(w http.ResponseWriter, r *http.Request) {

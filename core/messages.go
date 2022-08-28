@@ -10,6 +10,10 @@ const (
 	Unauthorized string = "Oturumunuzun süresi dolmuş."
 	NotLogin     string = "İçeriğe ulaşabilmek için oturum açın."
 	LoginFail    string = "Mail adresi yada Parola hatalı."
+	Cancel       string = "Sipariş iptal edildi."
+	Confirm      string = "Siparişiniz onaylandı."
+	Ready        string = "Sipariş hazırlandı."
+	Complate     string = "Sipariş tamamlandı."
 )
 
 func SendMessage(message string) map[string]interface{} {
