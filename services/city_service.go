@@ -2,6 +2,7 @@ package services
 
 import (
 	"Kirtasite/config"
+	"Kirtasite/core"
 	"Kirtasite/models"
 	"net/http"
 )
@@ -15,9 +16,9 @@ func GetCityById(key string) (int, map[string]interface{}) {
 	var city models.City
 	result := config.DB.Find(&city, "id = ?", key)
 	if result.Error != nil {
-		return http.StatusNoContent, SendMessage(NoContent)
+		return http.StatusNoContent, core.SendMessage(core.NoContent)
 	} else {
-		send := SendMessage(Ok)
+		send := core.SendMessage(core.Ok)
 		send["data"] = city
 		return http.StatusOK, send
 	}
