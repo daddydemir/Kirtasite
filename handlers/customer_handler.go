@@ -14,7 +14,14 @@ func GetCustomers(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, GET)
 
-	code, message := services.GetCustomers()
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
+	code, message := services.GetCustomers(t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }
@@ -24,9 +31,16 @@ func GetCustomerByUserId(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, GET)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	vars := mux.Vars(r)
 	key := vars["id"]
-	code, message := services.GetCustomerByUserId(key)
+	code, message := services.GetCustomerByUserId(key, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }

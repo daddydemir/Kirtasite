@@ -14,10 +14,17 @@ func GetOrderById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, GET)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	code, message := services.GetOrderById(key)
+	code, message := services.GetOrderById(key, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }
@@ -27,10 +34,17 @@ func GetOrdersByCustomerId(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, GET)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	code, message := services.GetOrdersByCustomerId(key)
+	code, message := services.GetOrdersByCustomerId(key, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }
@@ -40,10 +54,17 @@ func GetOrdersByStationeryId(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, GET)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	vars := mux.Vars(r)
 	key := vars["id"]
 
-	code, message := services.GetOrdersByStationeryId(key)
+	code, message := services.GetOrdersByStationeryId(key, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }

@@ -14,9 +14,16 @@ func GetFilesById(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, GET)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	vars := mux.Vars(r)
 	key := vars["id"]
-	code, message := services.GetFilesById(key)
+	code, message := services.GetFilesById(key, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }
@@ -26,9 +33,16 @@ func GetFilesByCustomerId(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set(AccessOrigin, ORIGIN)
 	w.Header().Set(AccessMethods, GET)
 
+	s, m, t := _tokenCheck(r)
+	if !s {
+		w.WriteHeader(http.StatusUnauthorized)
+		_ = json.NewEncoder(w).Encode(m)
+		return
+	}
+
 	vars := mux.Vars(r)
 	key := vars["id"]
-	code, message := services.GetFilesByCustomerId(key)
+	code, message := services.GetFilesByCustomerId(key, t)
 	w.WriteHeader(code)
 	_ = json.NewEncoder(w).Encode(message)
 }
