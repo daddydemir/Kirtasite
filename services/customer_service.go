@@ -6,12 +6,15 @@ import (
 	"Kirtasite/core"
 	"Kirtasite/models"
 	"Kirtasite/secuirty"
-	"fmt"
 	"net/http"
 	"strconv"
 )
 
-func GetCustomers() (int, map[string]interface{}) {
+func GetCustomers(token string) (int, map[string]interface{}) {
+	s, m := auth.IsValid(token)
+	if !s {
+		return http.StatusUnauthorized, m
+	}
 	var customers []models.Customer
 	result := config.DB.Preload("User.Role").Find(&customers)
 	if result.Error != nil {
@@ -23,7 +26,11 @@ func GetCustomers() (int, map[string]interface{}) {
 	}
 }
 
-func GetCustomerByUserId(key string) (int, map[string]interface{}) {
+func GetCustomerByUserId(key string, token string) (int, map[string]interface{}) {
+	s, m := auth.IsValid(token)
+	if !s {
+		return http.StatusUnauthorized, m
+	}
 	var customer models.Customer
 	result := config.DB.Preload("User.Role").Find(&customer, "user_id = ?", key)
 	if result.Error != nil {
@@ -36,9 +43,7 @@ func GetCustomerByUserId(key string) (int, map[string]interface{}) {
 }
 
 func AddCustomer(customers models.Customer) (int, map[string]interface{}) {
-	// TODO auth
 	customers.User.Password = secuirty.HashPassword(customers.User.Password)
-	fmt.Println("PAROLA : ", customers.User.Password)
 	if customers.Username == "" {
 		return http.StatusBadRequest, core.SendMessage(core.BadRequest)
 	}

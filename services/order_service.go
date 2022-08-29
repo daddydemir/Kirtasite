@@ -8,7 +8,18 @@ import (
 	"net/http"
 )
 
-func GetOrderById(key string) (int, map[string]interface{}) {
+func GetOrderById(key string, token string) (int, map[string]interface{}) {
+	s, m := auth.IsValid(token)
+	if !s {
+		return http.StatusUnauthorized, m
+	}
+	userId := auth.TokenParser(token)
+	var myorder models.Order
+	config.DB.Find(&myorder, "id = ?", key)
+	if userId != string(myorder.CustomerId) && userId != string(myorder.StationeryId) {
+		return http.StatusForbidden, core.SendMessage(core.Forbidden)
+	}
+
 	var order models.Order
 	result := config.DB.Preload("Customer.User.Role").Preload("File.Customer.Role").Preload("Status").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&order, "id = ?", key)
 	if result.Error != nil {
@@ -20,7 +31,18 @@ func GetOrderById(key string) (int, map[string]interface{}) {
 	}
 }
 
-func GetOrdersByCustomerId(key string) (int, map[string]interface{}) {
+func GetOrdersByCustomerId(key string, token string) (int, map[string]interface{}) {
+	s, m := auth.IsValid(token)
+	if !s {
+		return http.StatusUnauthorized, m
+	}
+	userId := auth.TokenParser(token)
+	var myorder models.Order
+	config.DB.Find(&myorder, "id = ?", key)
+	if userId != string(myorder.CustomerId) {
+		return http.StatusForbidden, core.SendMessage(core.Forbidden)
+	}
+
 	var orders []models.Order
 	result := config.DB.Preload("Customer.User.Role").Preload("File.Customer.Role").Preload("Status").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&orders, "customer_id = ?", key)
 	if result.Error != nil {
@@ -32,7 +54,18 @@ func GetOrdersByCustomerId(key string) (int, map[string]interface{}) {
 	}
 }
 
-func GetOrdersByStationeryId(key string) (int, map[string]interface{}) {
+func GetOrdersByStationeryId(key string, token string) (int, map[string]interface{}) {
+	s, m := auth.IsValid(token)
+	if !s {
+		return http.StatusUnauthorized, m
+	}
+	userId := auth.TokenParser(token)
+	var myorder models.Order
+	config.DB.Find(&myorder, "id = ?", key)
+	if userId != string(myorder.StationeryId) {
+		return http.StatusForbidden, core.SendMessage(core.Forbidden)
+	}
+
 	var orders []models.Order
 	result := config.DB.Preload("Customer.User.Role").Preload("File.Customer.Role").Preload("Status").Preload("Stationery.User.Role").Preload("Stationery.Address.City").Preload("Stationery.Address.District").Find(&orders, "stationery_id = ?", key)
 	if result.Error != nil {

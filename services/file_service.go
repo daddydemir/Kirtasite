@@ -9,7 +9,20 @@ import (
 	"strconv"
 )
 
-func GetFilesById(key string) (int, map[string]interface{}) {
+func GetFilesById(key string, token string) (int, map[string]interface{}) {
+	s, m := auth.IsValid(token)
+	if !s {
+		return http.StatusUnauthorized, m
+	}
+	userId := auth.TokenParser(token)
+	var user models.User
+	config.DB.Preload("Role").Find(&user, "id = ?", userId)
+	var myfile models.File
+	config.DB.Find(&myfile, "id = ?", key)
+	if userId != string(myfile.CustomerId) && user.Role.Name != core.STATIONERY {
+		return http.StatusForbidden, core.SendMessage(core.Forbidden)
+	}
+
 	var files models.File
 	result := config.DB.Preload("Customer.User.Role").Find(&files, "id = ?", key)
 	if result.Error != nil {
@@ -21,7 +34,18 @@ func GetFilesById(key string) (int, map[string]interface{}) {
 	}
 }
 
-func GetFilesByCustomerId(key string) (int, map[string]interface{}) {
+func GetFilesByCustomerId(key string, token string) (int, map[string]interface{}) {
+	s, m := auth.IsValid(token)
+	if !s {
+		return http.StatusUnauthorized, m
+	}
+	userId := auth.TokenParser(token)
+	var myfile models.File
+	config.DB.Find(&myfile, "id = ?", key)
+	if userId != string(myfile.CustomerId) {
+		return http.StatusForbidden, core.SendMessage(core.Forbidden)
+	}
+
 	var files []models.File
 	result := config.DB.Preload("Customer.User.Role").Find(&files, "user_id = ?", key)
 	if result.Error != nil {
