@@ -79,6 +79,9 @@ func MainRouting() http.Handler {
 	// Login
 	r.HandleFunc(baseurl+"login", Login).Methods(POST)
 
+	// Users
+	r.HandleFunc(baseurl+"user/image/{id:[0-9]+}", ImageUpload).Methods(PUT)
+
 	handler := cors.AllowAll().Handler(r)
 	return handler
 }
