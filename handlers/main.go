@@ -81,6 +81,7 @@ func MainRouting() http.Handler {
 
 	// Users
 	r.HandleFunc(baseurl+"user/image/{id:[0-9]+}", ImageUpload).Methods(PUT)
+	r.HandleFunc(baseurl+"user/password/{id:[0-9]+}", PasswordUpdate).Methods(PUT)
 
 	handler := cors.AllowAll().Handler(r)
 	return handler

@@ -14,6 +14,7 @@ const (
 	Confirm      string = "Siparişiniz onaylandı."
 	Ready        string = "Sipariş hazırlandı."
 	Complate     string = "Sipariş tamamlandı."
+	NoPass       string = "Şifre hatalı."
 )
 
 func SendMessage(message string) map[string]interface{} {
