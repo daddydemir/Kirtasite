@@ -17,5 +17,5 @@ func main() {
 		Handler: handlers.MainRouting(),
 	}
 
-	server.ListenAndServe()
+	_ = server.ListenAndServe()
 }

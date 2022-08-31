@@ -1,7 +1,7 @@
-package demirauth
+package auth
 
 import (
-	"Kirtasite/services"
+	"Kirtasite/core"
 	"fmt"
 	jwt "github.com/dgrijalva/jwt-go"
 	"time"
@@ -22,13 +22,12 @@ func IsValid(data string) (bool, map[string]interface{}) {
 	tkn, err := jwt.Parse(data, func(token *jwt.Token) (interface{}, error) {
 		return []byte("I-Am-not-user-this-key"), nil
 	})
-
 	if err != nil {
-		return false, services.SendMessage(services.NotLogin)
+		return false, core.SendMessage(core.NotLogin)
 	}
 
 	if !tkn.Valid {
-		return false, services.SendMessage(services.Unauthorized)
+		return false, core.SendMessage(core.Unauthorized)
 	} else {
 		return true, nil
 	}
