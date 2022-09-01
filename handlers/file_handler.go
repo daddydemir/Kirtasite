@@ -1,12 +1,16 @@
 package handlers
 
 import (
+	"Kirtasite/cloud"
+	"Kirtasite/core"
 	"Kirtasite/models"
 	"Kirtasite/services"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 func GetFilesById(w http.ResponseWriter, r *http.Request) {
@@ -59,9 +63,32 @@ func AddFiles(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var file models.File
-	body, _ := ioutil.ReadAll(r.Body)
-	_ = json.Unmarshal(body, &file)
+	file := models.File{}
+	file.Id, _ = strconv.Atoi(r.FormValue("id"))
+	file.CustomerId, _ = strconv.Atoi(r.FormValue("customer_id"))
+	if r.FormValue("private") == "true" {
+		file.Private = true
+	} else {
+		file.Private = false
+	}
+
+	content := r.ContentLength
+	if content >= 1024*1024*5 {
+		w.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(w).Encode(core.SendMessage(core.FileSize))
+		return
+	}
+	myfile, header, _ := r.FormFile("file")
+	defer myfile.Close()
+	path, folder, err := cloud.UploadFile(myfile, header)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		_ = json.NewEncoder(w).Encode(core.SendMessage(core.ServiceError))
+		return
+	}
+	file.FilePath = path
+	file.FolderId = folder
+	file.CreatedDate = time.Now()
 
 	code, message := services.AddFiles(file, t)
 	w.WriteHeader(code)

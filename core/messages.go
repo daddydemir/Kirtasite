@@ -15,6 +15,8 @@ const (
 	Ready        string = "Sipariş hazırlandı."
 	Complate     string = "Sipariş tamamlandı."
 	NoPass       string = "Şifre hatalı."
+	FileSize     string = "Dosya boyutu en fazla 5 MB olabilir."
+	ServiceError string = "Beklenmedik bir hata oluştu lütfen daha sonra tekrar deneyin."
 )
 
 func SendMessage(message string) map[string]interface{} {

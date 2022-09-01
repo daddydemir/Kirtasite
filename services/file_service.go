@@ -6,6 +6,7 @@ import (
 	"Kirtasite/core"
 	"Kirtasite/models"
 	"net/http"
+	"reflect"
 	"strconv"
 )
 
@@ -19,7 +20,7 @@ func GetFilesById(key string, token string) (int, map[string]interface{}) {
 	config.DB.Preload("Role").Find(&user, "id = ?", userId)
 	var myfile models.File
 	config.DB.Find(&myfile, "id = ?", key)
-	if userId != string(myfile.CustomerId) && user.Role.Name != core.STATIONERY {
+	if reflect.DeepEqual(userId, string(rune(myfile.CustomerId))) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 
