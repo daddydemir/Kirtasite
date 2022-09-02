@@ -53,9 +53,9 @@ func UpdatePrice(prices models.Price, key string, token string) (int, map[string
 	userId := auth.TokenParser(token)
 
 	var price models.Price
-	config.DB.Find(&price, "user_id = ?", userId)
+	config.DB.Find(&price, "stationery_id = ?", userId)
 
-	if userId != string(price.StationeryId) {
+	if userId != strconv.Itoa(price.StationeryId) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 	prices.Id, _ = strconv.Atoi(key)

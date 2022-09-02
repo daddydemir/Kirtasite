@@ -50,6 +50,12 @@ func AddComment(comment models.Comment, token string) (int, map[string]interface
 	if !s {
 		return http.StatusUnauthorized, m
 	}
+	userId := auth.TokenParser(token)
+	var user models.User
+	config.DB.Preload("Role").Find(&user, "id = ?", userId)
+	if core.CUSTOMER != user.Role.Name {
+		return http.StatusForbidden, core.SendMessage(core.Forbidden)
+	}
 	result := config.DB.Create(&comment)
 	if result.Error != nil {
 		return http.StatusBadRequest, core.SendMessage(core.BadRequest)
@@ -70,7 +76,7 @@ func UpdateComment(comment models.Comment, key string, token string) (int, map[s
 	var c models.Comment
 	config.DB.Find(&c, "id = ?", key)
 
-	if userId != string(c.StationeryId) {
+	if userId != strconv.Itoa(c.StationeryId) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 	comment.Id, _ = strconv.Atoi(key)

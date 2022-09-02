@@ -6,6 +6,7 @@ import (
 	"Kirtasite/core"
 	"Kirtasite/models"
 	"net/http"
+	"strconv"
 )
 
 func GetOrderById(key string, token string) (int, map[string]interface{}) {
@@ -16,7 +17,7 @@ func GetOrderById(key string, token string) (int, map[string]interface{}) {
 	userId := auth.TokenParser(token)
 	var myorder models.Order
 	config.DB.Find(&myorder, "id = ?", key)
-	if userId != string(myorder.CustomerId) && userId != string(myorder.StationeryId) {
+	if userId != strconv.Itoa(myorder.CustomerId) && userId != strconv.Itoa(myorder.StationeryId) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 
@@ -39,7 +40,7 @@ func GetOrdersByCustomerId(key string, token string) (int, map[string]interface{
 	userId := auth.TokenParser(token)
 	var myorder models.Order
 	config.DB.Find(&myorder, "id = ?", key)
-	if userId != string(myorder.CustomerId) {
+	if userId != strconv.Itoa(myorder.CustomerId) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 
@@ -62,7 +63,7 @@ func GetOrdersByStationeryId(key string, token string) (int, map[string]interfac
 	userId := auth.TokenParser(token)
 	var myorder models.Order
 	config.DB.Find(&myorder, "id = ?", key)
-	if userId != string(myorder.StationeryId) {
+	if userId != strconv.Itoa(myorder.StationeryId) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 
@@ -120,7 +121,7 @@ func CancelOrder(key string, token string) (int, interface{}) {
 	var order models.Order
 	config.DB.Find(&order, "id = ?", key)
 	userId := auth.TokenParser(token)
-	if userId != string(order.CustomerId) || order.StatusId != 1 {
+	if userId != strconv.Itoa(order.CustomerId) && order.StatusId != 1 {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 
@@ -143,7 +144,7 @@ func ConfirmOrder(key string, token string) (int, interface{}) {
 	var order models.Order
 	config.DB.Find(&order, "id = ?", key)
 	userId := auth.TokenParser(token)
-	if userId != string(order.StationeryId) {
+	if userId != strconv.Itoa(order.StationeryId) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 
@@ -166,7 +167,7 @@ func ReadyOrder(key string, token string) (int, interface{}) {
 	var order models.Order
 	config.DB.Find(&order, "id = ?", key)
 	userId := auth.TokenParser(token)
-	if userId != string(order.StationeryId) {
+	if userId != strconv.Itoa(order.StationeryId) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 
@@ -189,7 +190,7 @@ func CompleteOrder(key string, token string) (int, interface{}) {
 	var order models.Order
 	config.DB.Find(&order, "id = ?", key)
 	userId := auth.TokenParser(token)
-	if userId != string(order.StationeryId) {
+	if userId != strconv.Itoa(order.StationeryId) {
 		return http.StatusForbidden, core.SendMessage(core.Forbidden)
 	}
 
