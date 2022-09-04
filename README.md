@@ -28,6 +28,9 @@ user/image/0
 ```
 >  İstek **multipart/form-data** headerı ile yapılmalıdır. key => "file".
 
+[ÖRNEK KULLANIM](https://github.com/daddydemir/Kirtasite/blob/main/docs/ImageUpload.md)
+
+
 Password Update
 ```
 user/password/0
@@ -136,6 +139,7 @@ address/0
 	
 > Dosya eklemek için **multipart/form-data** headeri kullanılmalıdır. key => "file"
 	
+[ÖRNEK KULLANIM](https://github.com/daddydemir/Kirtasite/blob/main/docs/FileUpload.md)
 	
 ```json
 {
