@@ -3,19 +3,21 @@ package main
 import (
 	"Kirtasite/config"
 	"Kirtasite/handlers"
-	"fmt"
+	"log"
 	"net/http"
 )
 
 func main() {
-	fmt.Println("http://localhost:1337/api/v1/")
+	println("http://localhost" + config.Get("SERVER_PORT") + "/api/v1/")
 
 	config.GetConnect()
+	config.RedisClient()
 
 	server := &http.Server{
-		Addr:    ":1337",
+		Addr:    config.Get("SERVER_PORT"),
 		Handler: handlers.MainRouting(),
 	}
 
-	_ = server.ListenAndServe()
+	err := server.ListenAndServe()
+	log.Fatal(err)
 }

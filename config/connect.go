@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -8,6 +9,10 @@ import (
 var DB *gorm.DB
 
 func GetConnect() {
-	dsn := "root:@tcp(127.0.0.1:3306)/kirtasiye_test?parseTime=true"
-	DB, _ = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn := Get("DB_DSN")
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		fmt.Println(err)
+	}
+	DB = db
 }
