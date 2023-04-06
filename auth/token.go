@@ -12,6 +12,7 @@ func GenerateToken(userId string) string {
 	claims := token.Claims.(jwt.MapClaims)
 	claims["iat"] = time.Now().Unix()
 	claims["user"] = userId
+	claims["session"] = 1
 	claims["exp"] = time.Now().Add(time.Hour * 10).Unix()
 
 	tokenString, _ := token.SignedString([]byte("I-Am-not-user-this-key"))
@@ -38,6 +39,7 @@ func TokenParser(data string) string {
 	jwt.ParseWithClaims(data, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte("I-Am-not-user-this-key"), nil
 	})
-	userId := fmt.Sprintf("%v", claims["user"])
-	return userId
+	//userId := fmt.Sprintf("%v", claims["user"])
+	sessionId := fmt.Sprintf("%v", claims["session"])
+	return sessionId
 }
