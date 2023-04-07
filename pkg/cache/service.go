@@ -1,18 +1,16 @@
 package cache
 
 import (
-	"Kirtasite/auth"
 	"Kirtasite/config"
 	"Kirtasite/models"
 	"context"
 	"fmt"
 	"log"
-	"strconv"
 	"time"
 )
 
 func ReadToken(token string) {
-	val := config.RDB.Get(context.Background(), auth.TokenParser(token))
+	val := config.RDB.Get(context.Background(), "auth.TokenParser(token)")
 	if val.Err() != nil {
 		log.Println("key doesn't exist.")
 	}
@@ -25,7 +23,7 @@ func ReadToken(token string) {
 
 func WriteToken(session models.Session) bool {
 	log.Println("TIME", session.ExDate.Sub(time.Now()))
-	resp := config.RDB.Set(context.Background(), strconv.Itoa(session.Id), session.Token, session.ExDate.Sub(time.Now()))
+	resp := config.RDB.Set(context.Background(), session.Id.String(), session.Token, session.ExDate.Sub(time.Now()))
 	if resp.Err() != nil {
 		log.Fatal(resp.Err())
 		return false

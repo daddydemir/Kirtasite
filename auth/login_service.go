@@ -4,12 +4,10 @@ import (
 	"Kirtasite/config"
 	"Kirtasite/core"
 	"Kirtasite/models"
-	"Kirtasite/pkg/cache"
 	"Kirtasite/secuirty"
-	"gorm.io/gorm/clause"
+	"github.com/google/uuid"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -23,23 +21,21 @@ func LoginService(mail, password string, r *http.Request) (int, interface{}) {
 	if isTrue {
 		message := core.SendMessage(core.Ok)
 		message["data"] = user
-		message["token"] = GenerateToken(strconv.Itoa(user.Id))
-		res := createSession(user, GenerateToken(strconv.Itoa(user.Id)), r)
-		s := cache.WriteToken(res)
-		log.Println(s)
+		message["token"] = GenerateToken(createSession(user, r))
 		return http.StatusOK, message
 	}
 	return http.StatusBadRequest, core.SendMessage(core.LoginFail)
 }
 
-func createSession(user models.User, token string, r *http.Request) models.Session {
+func createSession(user models.User, r *http.Request) models.Session {
 	var session models.Session
+	session.Id = uuid.New()
 	session.Email = user.Mail
 	session.Ip = r.RemoteAddr
-	session.Token = token
 	session.CrDate = time.Now()
 	session.ExDate = time.Now().Add(time.Hour * 10)
-	config.DB.Clauses(clause.Returning{}).Create(&session)
+	//config.DB.Create(&session)
+	//config.DB.Clauses(clause.Returning{}).Create(&session)
 	log.Println(session.Id)
 	return session
 }

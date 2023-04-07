@@ -6,7 +6,6 @@ import (
 	"Kirtasite/models"
 	"Kirtasite/secuirty"
 	"net/http"
-	"strconv"
 )
 
 func Login(email string, password string) (int, interface{}) {
@@ -20,11 +19,11 @@ func Login(email string, password string) (int, interface{}) {
 		config.DB.Preload("Address.District").Preload("User.Role").Preload("Address.City").Find(&stationery, "user_id = ? ", user.Id)
 		isTrue := secuirty.CheckPassword(stationery.User.Password, password)
 		if isTrue {
-			id := strconv.Itoa(user.Id)
-			token := GenerateToken(id)
+			//id := strconv.Itoa(user.Id)
+			//token := GenerateToken(id)
 			send := core.SendMessage(core.Ok)
 			send["data"] = stationery
-			send["token"] = token
+			//send["token"] = token
 			return http.StatusOK, send
 		} else {
 			return http.StatusBadRequest, core.SendMessage(core.LoginFail)
@@ -34,11 +33,11 @@ func Login(email string, password string) (int, interface{}) {
 		config.DB.Preload("User.Role").Find(&customer, "user_id = ?", user.Id)
 		isTrue := secuirty.CheckPassword(customer.User.Password, password)
 		if isTrue {
-			id := strconv.Itoa(user.Id)
-			token := GenerateToken(id)
+			//id := strconv.Itoa(user.Id)
+			//token := GenerateToken(id)
 			send := core.SendMessage(core.Ok)
 			send["data"] = customer
-			send["token"] = token
+			//send["token"] = token
 			return http.StatusOK, send
 		} else {
 			return http.StatusBadRequest, core.SendMessage(core.LoginFail)
