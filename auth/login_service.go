@@ -34,8 +34,6 @@ func createSession(user models.User, r *http.Request) models.Session {
 	session.Ip = r.RemoteAddr
 	session.CrDate = time.Now()
 	session.ExDate = time.Now().Add(time.Hour * 10)
-	//config.DB.Create(&session)
-	//config.DB.Clauses(clause.Returning{}).Create(&session)
 	log.Println(session.Id)
 	return session
 }
