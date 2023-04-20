@@ -5,9 +5,9 @@ import (
 	"Kirtasite/core"
 	"Kirtasite/models"
 	"Kirtasite/secuirty"
+	"github.com/google/uuid"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 )
 
@@ -21,20 +21,19 @@ func LoginService(mail, password string, r *http.Request) (int, interface{}) {
 	if isTrue {
 		message := core.SendMessage(core.Ok)
 		message["data"] = user
-		message["token"] = GenerateToken(strconv.Itoa(user.Id))
-		createSession(user, GenerateToken(strconv.Itoa(user.Id)), r)
+		message["token"] = GenerateToken(createSession(user, r))
 		return http.StatusOK, message
 	}
 	return http.StatusBadRequest, core.SendMessage(core.LoginFail)
 }
 
-func createSession(user models.User, token string, r *http.Request) {
+func createSession(user models.User, r *http.Request) models.Session {
 	var session models.Session
+	session.Id = uuid.New()
 	session.Email = user.Mail
 	session.Ip = r.RemoteAddr
-	session.Token = token
 	session.CrDate = time.Now()
 	session.ExDate = time.Now().Add(time.Hour * 10)
-	result := config.DB.Save(&session)
-	log.Println(result)
+	log.Println(session.Id)
+	return session
 }
