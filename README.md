@@ -2,6 +2,20 @@
 Bu proje sayesinde kırtasiyelerde sıra beklemenize gerek kalmaz, siparişinizi verirsiniz ve siparişiniz hazırlandığında size haber veririz. 
 Bu repo **Kırtasite** uygulamasının backend kodlarını içermektedir.
 
+## Dockerize
+---
+Create Docker Container
+```sh
+
+docker build --tag kirtasite .
+
+```
+run container 
+```sh
+
+docker run -p 8080:8080 kirtasite
+
+```
 ---
 Base Url
 ```
